@@ -9,6 +9,15 @@ import shutil
 from os.path import isdir
 
 
+def decor(f):
+    def inner(*args, **kwargs):
+        print('$' * 3, 'Слушаюсь мой Господин', '$' * 3)
+        result = f(*args, **kwargs)
+        return result
+    return inner
+
+
+@decor
 def new_directory():
     directory_name = input('Напишите имя папки ')
     if not os.path.exists(directory_name):
@@ -18,29 +27,29 @@ def new_directory():
 
 
 # функция удаления файла/папки
+@decor
 def del_file():
     file_name = input('Введите имя файла ')
     os.remove(f'{file_name}')
 
 
 # Удаление папки
+@decor
 def del_dir():
     dir_name = input('Введите имя папки ')
     os.rmdir(f'{dir_name}')
     print('Папка удалена')
 
 
-# path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'{dir_name}')
-# os.rmdir(path)
-
-
 # копировать файл
+@decor
 def copy_file():
     old_file = input('Введите имя копируемого файла ')
     new_file = input('Введите новое имя файла ')
     shutil.copy(f'{old_file}', f'{new_file}')
 
 
+@decor
 def copy_directory():
     old_directory = input('Введите имя копируемой папки ')
     new_directory = input('Введите новое имя папки ')
@@ -48,14 +57,16 @@ def copy_directory():
 
 
 # просмотр содержимого директории
+@decor
 def show_directory():
     arr = os.listdir('.')
     print(arr)
 
 
 # Запись содержимого директории в файл
+@decor
 def write_directory():
-    arr = os.listdir()
+    arr = os.listdir('.')
     files = filter(lambda x: os.path.isfile(x), arr)
     dirs = filter(lambda x: os.path.isdir(x), arr)
     with open('listdir.txt', 'w') as f:
@@ -68,66 +79,40 @@ def write_directory():
             f.write(f'{dir}, ')
 
 
+@decor
 def system_info():
     print(platform.platform())
 
 
+# показать только папки
+@decor
 def dir_info():
-    all_objects = os.listdir()
-    dirs_only = []
-    for item in all_objects:
-        if os.path.isdir(item):
-            dirs_only.append(item)
-            print(dirs_only)
+    dir_only = [item for item in os.listdir('.') if os.path.isdir(item)]
+    print(list(dir_only))
+
+    # all_objects = os.listdir()
+    # dirs_only = []
+    # for item in all_objects:
+    #     if os.path.isdir(item):
+    #         dirs_only.append(item)
+    #         print(dirs_only)
 
 
+# показать только файлы
+@decor
 def file_info():
-    all_objects = os.listdir()
-    file_only = []
-    for item in all_objects:
-        if os.path.isfile(item):
-            file_only.append(item)
-            print(file_only)
+    file_only = [item for item in os.listdir('.') if os.path.isfile(item)]
+    print(list(file_only))
+
+    # all_objects = os.listdir()
+    # for item in all_objects:
+    #     if os.path.isfile(item):
+    #         file_only.append(item)
+    #         print(file_only)
 
 
-# new_directory()
-# del_dir()
-# dir_info()
-
-# Банковский баланс
-def balanse():
-    score = 0
-    purchase = []
-
-    while True:
-        print('1. пополнение счета')
-        print('2. покупка')
-        print('3. история покупок')
-        print('4. выход')
-
-        choice = input('Выберите пункт меню ')
-        if choice == '1':
-            score = int(input('На сколько пополнить счет? '))
-            print(score)
-
-        elif choice == '2':
-            purchase_question_score = int(input('На какую суммы Вы хотите сделать покупку? '))
-            if score < purchase_question_score:
-                print('У Вас недостаточно средств на счете')
-            else:
-                purchase_question = input('Что вы хотите купить? ')
-                purchase.append(purchase_question)
-                score = score - purchase_question_score
-                print(purchase)
-                print(score)
-        elif choice == '3':
-            print('Вы купили', purchase)
-        elif choice == '4':
-            break
-        else:
-            print('Неверный пункт меню')
-
-
+# noinspection PyBroadException
+@decor
 def balance():
     score = 0
     purchase = []
@@ -137,39 +122,45 @@ def balance():
         print('2. покупка')
         print('3. история покупок')
         print('4. выход')
+    # noinspection PyBroadException
 
-        choice = input('Выберите пункт меню ')
-        if choice == '1':
+        choice = int(input('Выберите пункт меню '))
+
+        if choice == 1:
             score = int(input('На сколько пополнить счет? '))
             print(score)
 
-        elif choice == '2':
+        elif choice == 2:
             purchase_question_score = int(input('На какую суммы Вы хотите сделать покупку? '))
-            if score < purchase_question_score:
-                print('У Вас недостаточно средств на счете')
-            else:
-                purchase_question = input('Что вы хотите купить? ')
-                purchase.append(purchase_question)
-                score = score - purchase_question_score
-                print(purchase)
-                print(score)
-        elif choice == '3':
+            (print('У Вас недостаточно средств на счете') if score < purchase_question_score else print('Приятных вам '
+                                                                                                        'покупок'))
+            purchase_question = str(input('Что вы хотите купить? '))
+            purchase.append(purchase_question)
+            score_new = score - purchase_question_score
+            print(purchase)
+            print(score_new)
+        elif choice == 3:
             print('Вы купили', purchase)
-        elif choice == '4':
+        elif choice == 4:
             break
         else:
             print('Неверный пункт меню')
 
 
+
+
 # Викторина
+@decor
 def victory():
     import random
 
     correct = 0
     incorrect = 0
 
-    again = input('Хотитет поиграть? ' 'Да / Нет ')
-    while again == 'Да':
+    again = str(input('Хотитет поиграть? ' 'Да / Нет '))
+    print('Чтобы остановить игру пишите ''стоп''')
+    while again.title() == 'Да' and 'Да' or 'да' in again:
+
         dates = {
             'Гагарин': '09.03.1934',
             'Нагиев': '04.04.1967',
@@ -201,11 +192,15 @@ def victory():
 
         for name in result_people:
             answer = input(f'Когда родился {name}? ')
+            # correct += 1 if answer == dates.get(f'{name}') else incorrect += 1
             if answer == dates.get(f'{name}'):
                 correct += 1
+            elif answer == 'стоп':
+                break
             else:
                 incorrect += 1
-                print('Правильный ответ', dates_words.get(f'{name}'))
+            print('Правильный ответ', dates_words.get(f'{name}'))
+
         vol = correct / 5 * 100
         vol_2 = incorrect / 5 * 100
         print('У вас', correct, 'правильных ответов.')
@@ -217,6 +212,7 @@ def victory():
         print('Увидимся позже :)')
 
 
+@decor
 def change_directory():
     os.getcwd()
     print('Ваша текущая директория', os.getcwd())
