@@ -5,6 +5,7 @@ while True:
     print('2. удалить (файл/папку)')
     print('3. копировать (файл/папку)')
     print('4. просмотр содержимого рабочей директории')
+    print('4.1. сохранить содержимое рабочей директории в файл')
     print('5. посмотреть только папки')
     print('6. посмотреть только файлы')
     print('7. просмотр информации об операционной системе')
@@ -13,6 +14,7 @@ while True:
     print('10. мой банковский счет ')
     print('11. смена рабочей директории ')
     print('12. выход ')
+
     panel = input('Выберите пункт меню ')
     if panel == '1':
         functions.new_directory()
@@ -34,6 +36,8 @@ while True:
             functions.copy_file()
     elif panel == '4':
         functions.show_directory()
+    elif panel == '4.1':
+        functions.write_directory()
     elif panel == '5':
         functions.dir_info()
     elif panel == '6':

@@ -53,6 +53,21 @@ def show_directory():
     print(arr)
 
 
+# Запись содержимого директории в файл
+def write_directory():
+    arr = os.listdir()
+    files = filter(lambda x: os.path.isfile(x), arr)
+    dirs = filter(lambda x: os.path.isdir(x), arr)
+    with open('listdir.txt', 'w') as f:
+        f.write('files: ')
+        for file in files:
+            f.write(f'{file}, ')
+        f.write('\n')
+        f.write('dirs: ')
+        for dir in dirs:
+            f.write(f'{dir}, ')
+
+
 def system_info():
     print(platform.platform())
 
@@ -209,6 +224,3 @@ def change_directory():
     os.chdir(f'{new_dir}')
     os.getcwd()
     print('Вы находитесь в', os.getcwd())
-
-
-
